@@ -22,8 +22,10 @@ module.exports = function(passport) {
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
-            done(err, user);
+        User.findById(id).then(user => {
+            done(null, user);
+        }).catch(err => {
+            done(err, null);
         });
     });
 
@@ -47,12 +49,8 @@ module.exports = function(passport) {
 
         // find a user whose email is the same as the forms email
         // we are checking to see if the user trying to login already exists
-        User.findOne({ 'local.email' :  email }, function(err, user) {
+        User.findOne({ 'local.email' :  email }).then(user => {
             // if there are any errors, return the error
-            if (err)
-                return done(err);
-
-            // check to see if theres already a user with that email
             if (user) {
                 return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
             } else {
@@ -66,18 +64,20 @@ module.exports = function(passport) {
                 newUser.local.password = newUser.generateHash(password);
 
                 // save the user
-                newUser.save(function(err) {
-                    if (err)
-                        throw err;
+                newUser.save().then(() => {
                     return done(null, newUser);
+                }).catch(err => {
+                    throw err;
                 });
             }
-
+        }).catch(err => {
+            return done(err);
         });
 
         });
 
     }));
+
     // =========================================================================
     // LOCAL LOGIN =============================================================
     // =========================================================================
@@ -93,13 +93,8 @@ module.exports = function(passport) {
     function(req, email, password, done) { // callback with email and password from our form
 
         // find a user whose email is the same as the forms email
-        // we are checking to see if the user trying to login already exists
-        User.findOne({ 'local.email' :  email }, function(err, user) {
+        User.findOne({ 'local.email' :  email }).then(user => {
             // if there are any errors, return the error before anything else
-            if (err)
-                return done(err);
-
-            // if no user is found, return the message
             if (!user)
                 return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
 
@@ -109,6 +104,8 @@ module.exports = function(passport) {
 
             // all is well, return successful user
             return done(null, user);
+        }).catch(err => {
+            return done(err);
         });
 
     }));
