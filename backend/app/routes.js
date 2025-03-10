@@ -10,8 +10,8 @@ var Image = require('./models/image');
 var Sheet = require('./models/sheet');
 var mkdirp = require('mkdirp');
 var rmdir = require('rimraf');
-
-var appDirectory = "/home/spikejones/dev/SpikeDB";
+var path = require('path');
+var appDirectory = __dirname + '/';
 
 // setting up the upload handler
 var storage = multer.diskStorage({

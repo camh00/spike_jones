@@ -3,6 +3,7 @@
 // set up ======================================================================
 // get all the tools we need
 var express  = require('express');
+var path     = require('path');
 var app      = express();
 var port     = 80;
 var mongoose = require('mongoose');
@@ -40,7 +41,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
-app.use('/archive', express.static('./archive'));
+app.use('/archive', express.static(path.join(__dirname, 'app/archive')));
 
 // launch ======================================================================
 app.listen(port);
