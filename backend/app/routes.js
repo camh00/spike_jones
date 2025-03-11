@@ -21,14 +21,16 @@ var storage = multer.diskStorage({
     var destination;
     if (ext == 'jpeg' || ext == 'jpg' || ext == 'tiff') {
       destination = appDirectory + '/archive/images/';
-    } else if (ext == 'mp3' || ext == 'wav') {
+    } else if (ext == 'mp3' || ext == 'wav' || ext == 'mpeg') {
       destination = appDirectory + '/archive/music/' + req.body.id;
-    } else if (ext == 'zip') {
+    } else if (ext == 'zip' || ext == 'rar' || ext == '7z' || ext == 'tar' || ext == 'x-zip-compressed') {
       destination = appDirectory + '/archive/music/' + req.body.collectionID;
     } else if (ext == 'mp4' || ext == 'avi') {
       destination = appDirectory + '/archive/videos/';
     } else if (ext == 'pdf') {
       destination = appDirectory + '/archive/sheets/';
+    } else {
+      return cb(new Error('Invalid file type ' + ext));
     }
     mkdirp(destination, function (err) {
       if (err) return cb(err);
@@ -44,9 +46,9 @@ var storage = multer.diskStorage({
       } else if (req.newMongoId) {
         cb(null, (req.newMongoId + '.jpeg'));
       }
-    } else if (ext == 'mp3' || ext == 'wav' || ext == 'mp4' || ext == 'avi' || ext == 'pdf') {
+    } else if (ext == 'mp3' || ext == 'wav' || ext == 'mpeg' || ext == 'mp4' || ext == 'avi' || ext == 'pdf') {
       cb(null, (req.newMongoId + '.' + ext));
-    } else if (ext == 'zip') {
+    } else if (ext == 'zip' || ext == 'rar' || ext == '7z' || ext == 'tar' || ext == 'x-zip-compressed') {
       cb(null, req.body.collectionID + '.' + ext);
     }
   }
@@ -119,12 +121,26 @@ module.exports = function (app, passport) {
     ]).then(function (data) {
       var collections = data[0];
       var tracks = data[1];
+
+      // Determine the zip file extension for each collection
+      collections.forEach(collection => {
+        var zipExtensions = ['zip', 'rar', '7z', 'tar', 'x-zip-compressed'];
+        var zipFile = null;
+        for (var ext of zipExtensions) {
+          if (fs.existsSync(path.join(appDirectory, `archive/music/${collection._id}/${collection._id}.${ext}`))) {
+            zipFile = `${collection._id}.${ext}`;
+            break;
+          }
+        }
+        collection.zipFile = zipFile;
+      });
+
       res.render('audio.ejs', {
         collections: collections,
         tracks: tracks,
         user: req.user
       });
-    });
+    }).catch(next);
   });
 
   app.post('/addCollection', function (req, res, next) {
@@ -181,7 +197,7 @@ module.exports = function (app, passport) {
   });
 
   app.post('/deleteCollection', function (req, res, next) {
-    rmdir('/Users/jeffcarbine/dev/SpikeDB/archive/music/' + req.body.collectionID, function (err) {
+    rmdir(path.join(appDirectory, 'archive/music/', req.body.collectionID), function (err) {
       if (err) throw err;
     });
     var artFile = appDirectory + '/archive/images/' + req.body.collectionID + '.jpeg';
@@ -202,7 +218,7 @@ module.exports = function (app, passport) {
     req.newMongoId = new mongoose.Types.ObjectId();
     next();
   }, upload.single('audioFile'), function (req, res, next) {
-    Tracks.count({ collectionID: req.body.id }, function (err, count) {
+    Tracks.countDocuments({ collectionID: req.body.id }).then(count => { // Updated to use promises
       if (count > 0) {
         Tracks.findOneAndUpdate({
           collectionID: req.body.id,
@@ -242,6 +258,8 @@ module.exports = function (app, passport) {
             return next(err);
           });
       }
+    }).catch(err => {
+      return next(err);
     });
   });
 
@@ -266,7 +284,7 @@ module.exports = function (app, passport) {
   });
 
   app.post('/deleteTrack', function (req, res, next) {
-    var trackFile = appDirectory + '/archive/music/' + req.body.collectionID + '/' + req.body.trackID + '.mp3';
+    var trackFile = appDirectory + '/archive/music/' + req.body.collectionID + '/' + req.body.trackID + '.mpeg';
     fs.unlink(trackFile, function (err) {
       if (err) return next(err);
       Tracks.updateOne({
@@ -306,24 +324,33 @@ module.exports = function (app, passport) {
   });
 
   app.post('/removeZipFile', function (req, res, next) {
-    var zipFile = appDirectory + '/archive/music/' + req.body.collectionID + '/' + req.body.collectionID + '.zip';
-    fs.unlink(zipFile, function (err) {
+    var zipFilePattern = new RegExp(`^${req.body.collectionID}\.(zip|rar|7z|tar|x-zip-compressed)$`);
+    var zipFileDir = path.join(appDirectory, 'archive/music/', req.body.collectionID);
+    fs.readdir(zipFileDir, function (err, files) {
       if (err) return next(err);
-      Collection.findOneAndUpdate({
-        _id: req.body.collectionID,
-      }, {
-        $set: {
-          download: false,
-        },
-      }, {
-        new: true
-      }).exec()
-        .then(() => {
-          res.redirect('/audio#' + req.body.collectionID);
-        })
-        .catch(err => {
-          return next(err);
+      var zipFile = files.find(file => zipFilePattern.test(file));
+      if (zipFile) {
+        fs.unlink(path.join(zipFileDir, zipFile), function (err) {
+          if (err) return next(err);
+          Collection.findOneAndUpdate({
+            _id: req.body.collectionID,
+          }, {
+            $set: {
+              download: false,
+            },
+          }, {
+            new: true
+          }).exec()
+            .then(() => {
+              res.redirect('/audio#' + req.body.collectionID);
+            })
+            .catch(err => {
+              return next(err);
+            });
         });
+      } else {
+        return next(new Error('Zip file not found'));
+      }
     });
   });
 
@@ -412,7 +439,8 @@ module.exports = function (app, passport) {
       _id: req.newMongoId,
       title: req.body.title,
       year: req.body.year,
-      people: req.body.people
+      people: req.body.people,
+      location: req.body.location
     });
     newImage.save()
       .then(() => {
@@ -423,20 +451,27 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/updateImage', function (req, res, next) {
+  app.post('/updateImage', upload.single('imageFile'), function (req, res, next) {
+    var updateData = {
+      title: req.body.title,
+      year: req.body.year,
+      people: req.body.people,
+      location: req.body.location
+    };
+
+    if (req.file) {
+      updateData.imageFile = req.file.filename;
+    }
+
     Image.findOneAndUpdate({
       _id: req.body.id,
     }, {
-      $set: {
-        title: req.body.title,
-        year: req.body.year,
-        people: req.body.people,
-      },
+      $set: updateData,
     }, {
       new: true
     }).exec()
       .then(() => {
-        res.redirect('/image#' + req.body.id);
+        res.redirect('/images#' + req.body.id);
       })
       .catch(err => {
         return next(err);

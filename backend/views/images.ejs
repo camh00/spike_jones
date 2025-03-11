@@ -64,23 +64,24 @@
       <div class="row">
       <% for(i = 0; i<images.length; i++) { %>
         <div class="col-sm-4 col-xs-12 well">
-          <img class="img-responsive" src="archive/images/<%- images[i]._id %>.jpeg">
+          <img class="img-responsive" src="/archive/images/<%- images[i]._id %>.jpeg">
           <hr/>
-          <form method="POST" method="/updateImage" enctype="multipart/form-data">
+          <form method="POST" action="/updateImage" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<%= images[i]._id %>">
             <div class="form-group">
-              <input class="form-control" type="text" placeholder="Title" value="<%- images[i].title %>">
+              <input class="form-control" type="text" name="title" placeholder="Title" value="<%= images[i].title %>">
             </div>
             <div class="form-group">
-              <input class="form-control" type="text" placeholder="Year" value="<%- images[i].year %>">
+              <input class="form-control" type="text" name="year" placeholder="Year" value="<%= images[i].year %>">
             </div>
             <div class="form-group">
-              <input class="form-control" type="text" placeholder="Musicians, Guests, Etc." value="<%- images[i].people %>">
+              <input class="form-control" type="text" name="people" placeholder="Musicians, Guests, Etc." value="<%= images[i].people %>">
             </div>
             <div class="form-group">
-              <input class="form-control" type="text" placeholder="Location" value="<%- images[i].location %>">
+              <input class="form-control" type="text" name="location" placeholder="Location" value="<%= images[i].location %>">
             </div>
             <div class="form-group">
-              <input class="form-control" type="file">
+              <input class="form-control" type="file" name="imageFile">
             </div>
             <button type="submit" class="btn btn-primary col-xs-6">Update Info</button>
           </form>

@@ -72,6 +72,7 @@
                 <div class="form-group">
                   <input type="text" name="recordNumber" class="form-control" placeholder="Record Number">
                 </div>
+                <label for="collectionArt">Collection Art (JPEG only)</label>
                 <input type="file" name="collectionArt" class="form-control">
               </div>
             </div>
@@ -108,7 +109,10 @@
                 <form method="POST" action="/addZipFile" enctype="multipart/form-data">
                   <input type="hidden" value="<%- collections[i]._id %>" name="collectionID">
                   <% if(collections[i].download == true) { %>
-                    <div class="alert alert-success">This collecion has a zip file.</div>
+                    <div class="alert alert-success">This collection has a zip file.</div>
+                    <% if (collections[i].zipFile) { %>
+                      <a href="/archive/music/<%- collections[i]._id %>/<%- collections[i].zipFile %>" download class="btn btn-warning col-xs-12">Download Zip File</a>
+                    <% } %>
                   <% } else { %>
                     <div class="alert alert-warning">There is no zip file for this collection.</div>
                   <% } %>
@@ -190,6 +194,9 @@
                     <input type="hidden" name="trackName" value="<%- (tracks[e].tracks[y].title).replace(/ /g,"_") %>">
                     <button class="btn btn-sm btn-danger col-sm-6"><span class="glyphicon glyphicon-remove"></span> Delete Track</button>
                   </form>
+                  <div class="form-group">
+                    <a href="/archive/music/<%- collections[i]._id %>/<%- tracks[e].tracks[y]._id %>.mpeg" download class="btn btn-warning col-xs-12">Download Track</a>
+                  </div>
                 </div>
                 <hr/>
             <% } %>
