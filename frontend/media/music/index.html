@@ -90,12 +90,12 @@
                         <div id="header-links-inner" class="header-links">
                             <ul id="menu-main-menu" class="menu">
                                 <li id="menu-item-584" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-584"><a href="../index.html">Home</a></li>
-                                <li id="menu-item-16" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-6 current_page_item menu-item-16"><a href="../about/index.html">Bio</a></li>
-                                <li id="menu-item-575" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-575"><a href="../about-the-project/index.html">About</a></li>
+                                <li id="menu-item-16" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-6 current_page_item menu-item-16"><a href="../bio/">Bio</a></li>
+                                <li id="menu-item-575" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-575"><a href="../about/">About</a></li>
                                 <li id="menu-item-625" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-625 menu-parent"><a href="#">Media</a>
                                     <ul class="sub-menu" style="visibility: hidden; min-width: 114px; display: none;">
                                         <li id="menu-item-667" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-667"><a href="index.html"><span>Music</span></a></li>
-                                        <li id="menu-item-668" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-668"><a href="images.html"><span>Photos</span></a></li>
+                                        <li id="menu-item-668" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-668"><a href="../images.html"><span>Photos</span></a></li>
                                     </ul>
                                 </li>
                                 <li id="menu-item-48" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48"><a href="../contact/index.html">Contact</a></li>
@@ -143,11 +143,8 @@
                         </div>
                     </div>
                     <div id="main-core">
-
-
                         <article id="post-608" class="post-608 page type-page status-publish hentry">
-
-                            
+                            <div id="songs"></div>
                         </article>
                     </div>
                     <!-- #main-core -->
@@ -195,6 +192,18 @@
             $("#myBtn").click(function () {
                 $("#myModal").modal();
             });
+        });
+
+        // Fetch songs
+        $.get('/api/songs', function(data) {
+            var songsHtml = '<h2>Songs</h2><ul>';
+            data.forEach(function(collection) {
+                collection.tracks.forEach(function(track) {
+                    songsHtml += '<li>' + track.title + '</li>';
+                });
+            });
+            songsHtml += '</ul>';
+            $('#songs').html(songsHtml);
         });
     </script>
 </body>

@@ -1,3 +1,5 @@
+var express = require('express');
+var router = express.Router();
 var request = require('request');
 var fs = require('fs');
 var multer = require('multer');
@@ -60,18 +62,18 @@ module.exports = function (app, passport) {
   // =====================================
   // HOME PAGE (with login links) ========
   // =====================================
-  app.get('/', function (req, res) {
+  router.get('/', function (req, res) {
     res.render('index.ejs');
   });
 
   // =====================================
   // LOGIN ===============================
   // =====================================
-  app.get('/login', function (req, res) {
+  router.get('/login', function (req, res) {
     res.render('login.ejs', { message: req.flash('loginMessage') });
   });
 
-  app.post('/login', passport.authenticate('local-login', {
+  router.post('/login', passport.authenticate('local-login', {
     successRedirect: '/audio',
     failureRedirect: '/login',
     failureFlash: true
@@ -80,7 +82,7 @@ module.exports = function (app, passport) {
   // =====================================
   // SIGNUP ==============================
   // =====================================
-  app.get('/signup', function (req, res) {
+  router.get('/signup', function (req, res) {
     User.find().exec().then(function (data) {
       if (req.user.local.email === 'spikeadmin') {
         res.render('signup.ejs', {
@@ -94,14 +96,14 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/signup', passport.authenticate('local-signup', {
+  router.post('/signup', passport.authenticate('local-signup', {
     successRedirect: '/signup',
     failureRedirect: '/signup',
     failureFlash: true
   }));
 
   // delete a user from the database
-  app.post('/deleteUser', function (req, res, next) {
+  router.post('/deleteUser', function (req, res, next) {
     User.deleteOne({ '_id': req.body.userid }).exec()
       .then(() => {
         res.redirect('/signup');
@@ -114,7 +116,7 @@ module.exports = function (app, passport) {
   // =====================================
   // AUDIO PAGE ==========================
   // =====================================
-  app.get('/audio', isLoggedIn, function (req, res, next) {
+  router.get('/audio', isLoggedIn, function (req, res, next) {
     Promise.all([
       Collection.find().exec(),
       Tracks.find().exec()
@@ -143,7 +145,7 @@ module.exports = function (app, passport) {
     }).catch(next);
   });
 
-  app.post('/addCollection', function (req, res, next) {
+  router.post('/addCollection', function (req, res, next) {
     req.newMongoId = new mongoose.Types.ObjectId();
     next();
   }, upload.single('collectionArt'), function (req, res, next) {
@@ -168,7 +170,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/updateCollection', function (req, res, next) {
+  router.post('/updateCollection', function (req, res, next) {
     Collection.findOneAndUpdate({
       _id: req.body.id,
     }, {
@@ -192,11 +194,11 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/updateArt', upload.single('artFile'), function (req, res, next) {
+  router.post('/updateArt', upload.single('artFile'), function (req, res, next) {
     res.redirect('/audio');
   });
 
-  app.post('/deleteCollection', function (req, res, next) {
+  router.post('/deleteCollection', function (req, res, next) {
     rmdir(path.join(appDirectory, 'archive/music/', req.body.collectionID), function (err) {
       if (err) throw err;
     });
@@ -214,7 +216,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/addTrack', function (req, res, next) {
+  router.post('/addTrack', function (req, res, next) {
     req.newMongoId = new mongoose.Types.ObjectId();
     next();
   }, upload.single('audioFile'), function (req, res, next) {
@@ -263,7 +265,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/updateTrack', upload.single('audioFile'), function (req, res, next) {
+  router.post('/updateTrack', upload.single('audioFile'), function (req, res, next) {
     Tracks.findOneAndUpdate({
       'tracks._id': req.body.trackID,
     }, {
@@ -283,7 +285,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/deleteTrack', function (req, res, next) {
+  router.post('/deleteTrack', function (req, res, next) {
     var trackFile = appDirectory + '/archive/music/' + req.body.collectionID + '/' + req.body.trackID + '.mpeg';
     fs.unlink(trackFile, function (err) {
       if (err) return next(err);
@@ -305,7 +307,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/addZipFile', upload.single('zipFile'), function (req, res, next) {
+  router.post('/addZipFile', upload.single('zipFile'), function (req, res, next) {
     Collection.findOneAndUpdate({
       _id: req.body.collectionID,
     }, {
@@ -323,7 +325,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/removeZipFile', function (req, res, next) {
+  router.post('/removeZipFile', function (req, res, next) {
     var zipFilePattern = new RegExp(`^${req.body.collectionID}\.(zip|rar|7z|tar|x-zip-compressed)$`);
     var zipFileDir = path.join(appDirectory, 'archive/music/', req.body.collectionID);
     fs.readdir(zipFileDir, function (err, files) {
@@ -357,7 +359,7 @@ module.exports = function (app, passport) {
   // =====================================
   // VIDEO PAGE ==========================
   // =====================================
-  app.get('/video', isLoggedIn, function (req, res) {
+  router.get('/video', isLoggedIn, function (req, res) {
     Video.find().exec().then(function (data) {
       res.render('video.ejs', {
         videos: data,
@@ -366,7 +368,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/addVideo', function (req, res, next) {
+  router.post('/addVideo', function (req, res, next) {
     req.newMongoId = new mongoose.Types.ObjectId();
     next();
   }, upload.single('videoFile'), function (req, res, next) {
@@ -385,7 +387,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/updateVideo', function (req, res, next) {
+  router.post('/updateVideo', function (req, res, next) {
     Video.findOneAndUpdate({
       _id: req.body.id,
     }, {
@@ -405,7 +407,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/deleteVideo', function (req, res, next) {
+  router.post('/deleteVideo', function (req, res, next) {
     var videoFile = appDirectory + '/archive/videos/' + req.body.id + '.mp4';
     fs.unlink(videoFile, function (err) {
       if (err) return next(err);
@@ -422,7 +424,7 @@ module.exports = function (app, passport) {
   // =====================================
   // IMAGES PAGE =========================
   // =====================================
-  app.get('/images', isLoggedIn, function (req, res) {
+  router.get('/images', isLoggedIn, function (req, res) {
     Image.find().exec().then(function (data) {
       res.render('images.ejs', {
         images: data,
@@ -431,7 +433,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/addImage', function (req, res, next) {
+  router.post('/addImage', function (req, res, next) {
     req.newMongoId = new mongoose.Types.ObjectId();
     next();
   }, upload.single('imageFile'), function (req, res, next) {
@@ -451,7 +453,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/updateImage', upload.single('imageFile'), function (req, res, next) {
+  router.post('/updateImage', upload.single('imageFile'), function (req, res, next) {
     var updateData = {
       title: req.body.title,
       year: req.body.year,
@@ -478,7 +480,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/deleteImage', function (req, res, next) {
+  router.post('/deleteImage', function (req, res, next) {
     var imageFile = appDirectory + '/archive/images/' + req.body.id + '.jpeg';
     fs.unlink(imageFile, function (err) {
       if (err) return next(err);
@@ -495,7 +497,7 @@ module.exports = function (app, passport) {
   // =====================================
   // SHEETS PAGE =========================
   // =====================================
-  app.get('/sheets', isLoggedIn, function (req, res) {
+  router.get('/sheets', isLoggedIn, function (req, res) {
     Sheet.find().exec().then(function (data) {
       res.render('sheets.ejs', {
         sheets: data,
@@ -504,7 +506,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/addSheet', function (req, res, next) {
+  router.post('/addSheet', function (req, res, next) {
     req.newMongoId = new mongoose.Types.ObjectId();
     next();
   }, upload.single('sheetFile'), function (req, res, next) {
@@ -522,7 +524,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/updateSheet', function (req, res, next) {
+  router.post('/updateSheet', function (req, res, next) {
     Sheet.findOneAndUpdate({
       _id: req.body.id,
     }, {
@@ -541,7 +543,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/deleteSheet', function (req, res, next) {
+  router.post('/deleteSheet', function (req, res, next) {
     var sheetFile = appDirectory + '/archive/sheets/' + req.body.id + '.pdf';
     fs.unlink(sheetFile, function (err) {
       if (err) return next(err);
@@ -558,7 +560,7 @@ module.exports = function (app, passport) {
   // =====================================
   // API ENDPOINTS========================
   // =====================================
-  app.get('/retrieve/collections', function (req, res, next) {
+  router.get('/retrieve/collections', function (req, res, next) {
     Promise.all([
       Collection.find().exec(),
       Tracks.find().exec()
@@ -582,7 +584,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.get('/retrieve/videos', function (req, res) {
+  router.get('/retrieve/videos', function (req, res) {
     Video.find().exec().then(function (data) {
       res.jsonp(data);
     }).catch(err => {
@@ -590,7 +592,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.get('/retrieve/images', function (req, res) {
+  router.get('/retrieve/images', function (req, res) {
     Image.find().exec().then(function (data) {
       res.jsonp(data);
     }).catch(err => {
@@ -598,7 +600,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.get('/retrieve/sheets', function (req, res) {
+  router.get('/retrieve/sheets', function (req, res) {
     Sheet.find().exec().then(function (data) {
       res.jsonp(data);
     }).catch(err => {
@@ -609,10 +611,13 @@ module.exports = function (app, passport) {
   // =====================================
   // LOGOUT ==============================
   // =====================================
-  app.get('/logout', function (req, res) {
+  router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');
   });
+
+  app.use('/', router);
+  return router;
 };
 
 // route middleware to make sure a user is logged in
