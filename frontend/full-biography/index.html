@@ -210,8 +210,19 @@
 
 </div><!-- #body-core -->
 
+
 <script type="text/javascript">
- $(&quot;.targetDiv:not(#div&quot;+$(this).attr(&quot;target&quot;)+&quot;)&quot;).hide();\n\njQuery(function() {\n  jQuery(\'.showSingle\').click(function() {\n    var targetID = \'#div\' + $(this).attr(\'target\');\n    jQuery(\'.targetDiv:not(\'+targetID+\')\').hide();\n    if (jQuery(targetID).is(&quot;:visible&quot;)) {\n      jQuery(\'.targetDiv\').hide();\n    } else {\n      jQuery(targetID).slideToggle();\n    }\n  });\n});
+  jQuery(function() {
+	jQuery('.showSingle').click(function() {
+	  var targetID = '#div' + jQuery(this).attr('target');
+	  jQuery('.targetDiv:not(' + targetID + ')').hide();
+	  if (jQuery(targetID).is(':visible')) {
+		jQuery('.targetDiv').hide();
+	  } else {
+		jQuery(targetID).slideToggle();
+	  }
+	});
+  });
 </script>
 <script type='text/javascript' src='../wp-content/themes/minamaze/lib/extentions/prettyPhoto/js/jquery.prettyPhoto005e.js?ver=3.1.6'></script>
 <script type='text/javascript' src='../wp-content/themes/minamaze/lib/scripts/main-frontend4963.js?ver=1.1'></script>
@@ -224,12 +235,12 @@
 
 <script src="../spikeui/lib/js/iframeResizer.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-            var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
+  var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
 
-            iFrameResize({
-                heightCalculationMethod: isOldIE ? 'max' : 'lowestElement'
-            });
-        </script>
+  iFrameResize({
+	heightCalculationMethod: isOldIE ? 'max' : 'lowestElement'
+  });
+</script>
 </body>
 
 <!-- Mirrored from digitalmediauvu.com/spikejones/full-biography/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 10 Feb 2017 02:03:51 GMT -->
