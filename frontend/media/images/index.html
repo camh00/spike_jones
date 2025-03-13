@@ -137,7 +137,7 @@
                 <div id="main">
                     <div id="intro" class="option1">
                         <div id="intro-core">
-                            <h1 class="page-title"><span>Music</span></h1>
+                            <h1 class="page-title"><span>Images</span></h1>
                             <div id="breadcrumbs">
                                 <div id="breadcrumbs-core"><a href="../index.html">Home</a><span class="delimiter"> / </span>Music</div>
                             </div>
@@ -145,7 +145,7 @@
                     </div>
                     <div id="main-core">
                         <article id="post-608" class="post-608 page type-page status-publish hentry">
-                            <div id="songs"></div>
+                            <div id="pictures"></div>
                         </article>
                     </div>
                     <!-- #main-core -->
@@ -190,22 +190,20 @@
     <script type="text/javascript" src="../lib/js/app.js"></script>
     <script>
         $(document).ready(function () {
-            $("#myBtn").click(function () {
-                $("#myModal").modal();
-            });
+        $("#myBtn").click(function () {
+            $("#myModal").modal();
         });
 
-        // Fetch songs
-        $.get('/api/songs', function(data) {
-            var songsHtml = '<h2>Songs</h2><ul>';
-            data.forEach(function(collection) {
-                collection.tracks.forEach(function(track) {
-                    songsHtml += '<li>' + track.title + '</li>';
-                });
+        // Fetch pictures
+        $.get('/api/pictures', function(data) {
+            var picturesHtml = '<h2>Pictures</h2><ul>';
+            data.forEach(function(picture) {
+                picturesHtml += '<li><img src="/path/to/images/' + picture.filename + '" alt="' + picture.title + '"></li>';
             });
-            songsHtml += '</ul>';
-            $('#songs').html(songsHtml);
+            picturesHtml += '</ul>';
+            $('#pictures').html(picturesHtml);
         });
+    });
     </script>
 </body>
 

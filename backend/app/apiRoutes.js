@@ -6,27 +6,33 @@ var Image = require('./models/image');
 var Video = require('./models/video');
 
 // API endpoint to get songs
-router.get('/songs', function(req, res, next) {
-  Tracks.find().exec(function(err, tracks) {
-    if (err) return next(err);
+router.get('/songs', async function(req, res, next) {
+  try {
+    const tracks = await Tracks.find().exec();
     res.json(tracks);
-  });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // API endpoint to get pictures
-router.get('/pictures', function(req, res, next) {
-  Image.find().exec(function(err, images) {
-    if (err) return next(err);
+router.get('/pictures', async function(req, res, next) {
+  try {
+    const images = await Image.find().exec();
     res.json(images);
-  });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // API endpoint to get videos
-router.get('/videos', function(req, res, next) {
-  Video.find().exec(function(err, videos) {
-    if (err) return next(err);
+router.get('/videos', async function(req, res, next) {
+  try {
+    const videos = await Video.find().exec();
     res.json(videos);
-  });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
