@@ -1,15 +1,15 @@
 FROM node:latest
 
-LABEL Dev = "Cam H"
+LABEL Dev = "Cam H (but really Derek L)"
 
 WORKDIR /app
 
 COPY . .
 
-RUN cd backend
+WORKDIR /app/backend
 
 RUN npm ci
 
 RUN rm -rf /app/Dockerfile
 
-CMD ["npm", "run", "server"]
+CMD ["npm", "run", "start"]
