@@ -90,7 +90,7 @@
                         <div id="header-links-inner" class="header-links">
                             <ul id="menu-main-menu" class="menu">
                                 <li id="menu-item-584" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-584"><a href="../../index.html">Home</a></li>
-                                <li id="menu-item-16" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-6 current_page_item menu-item-16"><a href="../bio/">Bio</a></li>
+                                <li id="menu-item-16" class="menu-item menu-item-type-post_type menu-item-object-page page_item page-item-6 menu-item-16"><a href="../../bio/">Bio</a></li>
                                 <li id="menu-item-575" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-575"><a href="../../about/">About</a></li>
                                 <li id="menu-item-625" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-625 menu-parent"><a href="#">Media</a>
                                     <ul class="sub-menu" style="visibility: hidden; min-width: 114px; display: none;">
@@ -100,7 +100,7 @@
                                     </ul>
                                 </li>
                                 <li id="menu-item-48" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48"><a href="../../contact/index.html">Contact</a></li>
-                                <li id="menu-item-47" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47"><a href="./../donate/index.html">Get Involved</a></li>
+                                <li id="menu-item-47" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47"><a href="../../getinvolved/index.html">Get Involved</a></li>
                             </ul>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
                                     </ul>
                                 </li>
                                 <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48"><a href="../contact/index.html">Contact</a></li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47"><a href="../donate/index.html">Get Involved</a></li>
+                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47"><a href="../../getinvolved/index.html">Get Involved</a></li>
                             </ul>
                         </div>
                     </div>
@@ -193,18 +193,30 @@
             $("#myBtn").click(function () {
                 $("#myModal").modal();
             });
-        });
-
-        // Fetch songs
-        $.get('/api/songs', function(data) {
-            var songsHtml = '<h2>Songs</h2><ul>';
-            data.forEach(function(collection) {
-                collection.tracks.forEach(function(track) {
-                    songsHtml += '<li>' + track.title + '</li>';
+    
+            // Fetch songs
+            $.get('/api/songs', function(data) {
+                var songsHtml = '<h2>Songs</h2><div class="row">';
+                data.forEach(function(collection) {
+                    collection.tracks.forEach(function(track) {
+                        songsHtml += `
+                            <div class="col-md-4">
+                                <div class="card mb-4 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${track.title}</h5>
+                                        <audio controls class="w-100">
+                                            <source src="/archive/music/${collection.collectionID}/${track._id}.mpeg" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
                 });
+                songsHtml += '</div>';
+                $('#songs').html(songsHtml);
             });
-            songsHtml += '</ul>';
-            $('#songs').html(songsHtml);
         });
     </script>
 </body>
