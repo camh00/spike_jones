@@ -94,7 +94,7 @@
                                 <li id="menu-item-575" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-575"><a href="../../about/">About</a></li>
                                 <li id="menu-item-625" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-625 menu-parent"><a href="#">Media</a>
                                     <ul class="sub-menu" style="visibility: hidden; min-width: 114px; display: none;">
-                                        <li id="menu-item-667" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-667"><a href="../index.html"><span>Music</span></a></li>
+                                        <li id="menu-item-667" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-667"><a href="../music/"><span>Music</span></a></li>
                                         <li id="menu-item-668" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-668"><a href="../images/index.html"><span>Photos</span></a></li>
                                         <li id="menu-item-668" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-668"><a href="../videos/index.html"><span>Videos</span></a></li>
                                     </ul>
@@ -137,7 +137,7 @@
                 <div id="main">
                     <div id="intro" class="option1">
                         <div id="intro-core">
-                            <h1 class="page-title"><span>Music</span></h1>
+                            <h1 class="page-title"><span>Images</span></h1>
                             <div id="breadcrumbs">
                                 <div id="breadcrumbs-core"><a href="../index.html">Home</a><span class="delimiter"> / </span>Music</div>
                             </div>
@@ -145,7 +145,7 @@
                     </div>
                     <div id="main-core">
                         <article id="post-608" class="post-608 page type-page status-publish hentry">
-                            <div id="songs"></div>
+                            <div id="pictures"></div>
                         </article>
                     </div>
                     <!-- #main-core -->
@@ -190,34 +190,20 @@
     <script type="text/javascript" src="../lib/js/app.js"></script>
     <script>
         $(document).ready(function () {
-            $("#myBtn").click(function () {
-                $("#myModal").modal();
-            });
-    
-            // Fetch songs
-            $.get('/api/songs', function(data) {
-                var songsHtml = '<h2>Songs</h2><div class="row">';
-                data.forEach(function(collection) {
-                    collection.tracks.forEach(function(track) {
-                        songsHtml += `
-                            <div class="col-md-4">
-                                <div class="card mb-4 shadow-sm">
-                                    <div class="card-body">
-                                        <h5 class="card-title">${track.title}</h5>
-                                        <audio controls class="w-100">
-                                            <source src="/archive/music/${collection.collectionID}/${track._id}.mpeg" type="audio/mpeg">
-                                            Your browser does not support the audio element.
-                                        </audio>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                });
-                songsHtml += '</div>';
-                $('#songs').html(songsHtml);
-            });
+        $("#myBtn").click(function () {
+            $("#myModal").modal();
         });
+
+        // Fetch pictures
+        $.get('/api/pictures', function(data) {
+            var picturesHtml = '<h2>Pictures</h2><ul>';
+            data.forEach(function(picture) {
+                picturesHtml += '<li><img src="/path/to/images/' + picture.filename + '" alt="' + picture.title + '"></li>';
+            });
+            picturesHtml += '</ul>';
+            $('#pictures').html(picturesHtml);
+        });
+    });
     </script>
 </body>
 

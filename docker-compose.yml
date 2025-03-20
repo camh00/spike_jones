@@ -1,12 +1,22 @@
-version: '3.8'
 services:
   mongodb:
     image: mongo:latest
-    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
-      - mongo-data:/data/db
-
-volumes:
-  mongo-data:
+      - ./data/mongodb:/data/db
+  node:
+    build: .
+    restart: always
+    image: node:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      mongodb:
+                condition: service_started
+                restart: true
+    environment:
+      - DB_URI=mongodb://mongo:27017
+      # - ADMIN_PASSWORD=Admin Pass here
+    volumes: 
+      - ./data/archive:/app/archive
