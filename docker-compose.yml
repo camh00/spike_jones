@@ -7,8 +7,7 @@ services:
       - ./data/mongodb:/data/db
   node:
     build: .
-    restart: always
-    image: node:latest
+    restart: unless-stopped
     ports:
       - "8080:80"
     depends_on:
@@ -17,6 +16,6 @@ services:
                 restart: true
     environment:
       - DB_URI=mongodb://mongo:27017
-      # - ADMIN_PASSWORD=Admin Pass here
+      - ADMIN_PASSWORD=Admin Pass here
     volumes: 
       - ./data/archive:/app/archive

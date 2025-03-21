@@ -8,8 +8,9 @@ QUICK START
 
 To start the project:
 
-  docker-compose up -d
+  docker compose up -d
 
+  docker compose up //to view running logs
 
 -----------------
 SERVICE INFO
@@ -34,22 +35,18 @@ When migrating this application:
 
 1. Stop the running containers:
    
-   docker-compose down
+   docker compose down
 
 2. Copy the data directory (IMPORTANT: Maintain the exact directory structure):
    
-   cp -r ./data /new/location/data
-   
-   OR
-   
    Copy the entire parent directory to maintain state:
    
-   cp -r /path/to/project /new/location
+   cp -r /path/to/spike_jones /new/location
 
 3. Start the application in the new location:
    
    cd /new/location
-   docker-compose up -d
+   docker compose up -d
 
 
 -----------------
