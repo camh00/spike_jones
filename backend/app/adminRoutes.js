@@ -22,15 +22,15 @@ var storage = multer.diskStorage({
     var ext = filetype.substring(filetype.indexOf('/') + 1);
     var destination;
     if (ext == 'jpeg' || ext == 'jpg' || ext == 'tiff') {
-      destination = appDirectory + '/archive/images/';
+      destination = path.join(appDirectory, '/app/archive/images/');
     } else if (ext == 'mp3' || ext == 'wav' || ext == 'mpeg') {
-      destination = appDirectory + '/archive/music/' + req.body.id;
+      destination = path.join(appDirectory, '/app/archive/music/', req.body.id);
     } else if (ext == 'zip' || ext == 'rar' || ext == '7z' || ext == 'tar' || ext == 'x-zip-compressed') {
-      destination = appDirectory + '/archive/music/' + req.body.collectionID;
+      destination = path.join(appDirectory, '/app/archive/music/', req.body.collectionID);
     } else if (ext == 'mp4' || ext == 'avi') {
-      destination = appDirectory + '/archive/videos/';
+      destination = path.join(appDirectory, '/app/archive/videos/');
     } else if (ext == 'pdf') {
-      destination = appDirectory + '/archive/sheets/';
+      destination = path.join(appDirectory, '/app/archive/sheets/');
     } else {
       return cb(new Error('Invalid file type ' + ext));
     }
@@ -129,7 +129,7 @@ module.exports = function (app, passport) {
         var zipExtensions = ['zip', 'rar', '7z', 'tar', 'x-zip-compressed'];
         var zipFile = null;
         for (var ext of zipExtensions) {
-          if (fs.existsSync(path.join(appDirectory, `archive/music/${collection._id}/${collection._id}.${ext}`))) {
+          if (fs.existsSync(path.join(appDirectory, `/app/archive/music/${collection._id}/${collection._id}.${ext}`))) {
             zipFile = `${collection._id}.${ext}`;
             break;
           }
@@ -199,10 +199,10 @@ module.exports = function (app, passport) {
   });
 
   router.post('/deleteCollection', function (req, res, next) {
-    rmdir(path.join(appDirectory, 'archive/music/', req.body.collectionID), function (err) {
+    rmdir(path.join(appDirectory, '/app/archive/music/', req.body.collectionID), function (err) {
       if (err) throw err;
     });
-    var artFile = appDirectory + '/archive/images/' + req.body.collectionID + '.jpeg';
+    var artFile = appDirectory + '//app/archive/images/' + req.body.collectionID + '.jpeg';
     fs.unlink(artFile, function (err) {
       if (err) return next(err);
       Promise.all([
@@ -286,7 +286,7 @@ module.exports = function (app, passport) {
   });
 
   router.post('/deleteTrack', function (req, res, next) {
-    var trackFile = appDirectory + '/archive/music/' + req.body.collectionID + '/' + req.body.trackID + '.mpeg';
+    var trackFile = appDirectory + '//app/archive/music/' + req.body.collectionID + '/' + req.body.trackID + '.mpeg';
     fs.unlink(trackFile, function (err) {
       if (err) return next(err);
       Tracks.updateOne({
@@ -327,7 +327,7 @@ module.exports = function (app, passport) {
 
   router.post('/removeZipFile', function (req, res, next) {
     var zipFilePattern = new RegExp(`^${req.body.collectionID}\.(zip|rar|7z|tar|x-zip-compressed)$`);
-    var zipFileDir = path.join(appDirectory, 'archive/music/', req.body.collectionID);
+    var zipFileDir = path.join(appDirectory, '/app/archive/music/', req.body.collectionID);
     fs.readdir(zipFileDir, function (err, files) {
       if (err) return next(err);
       var zipFile = files.find(file => zipFilePattern.test(file));
@@ -408,7 +408,7 @@ module.exports = function (app, passport) {
   });
 
   router.post('/deleteVideo', function (req, res, next) {
-    var videoFile = appDirectory + '/archive/videos/' + req.body.id + '.mp4';
+    var videoFile = appDirectory + '//app/archive/videos/' + req.body.id + '.mp4';
     fs.unlink(videoFile, function (err) {
       if (err) return next(err);
       Video.deleteOne({ '_id': req.body.id }).exec()
@@ -481,7 +481,7 @@ module.exports = function (app, passport) {
   });
 
   router.post('/deleteImage', function (req, res, next) {
-    var imageFile = appDirectory + '/archive/images/' + req.body.id + '.jpeg';
+    var imageFile = appDirectory + '//app/archive/images/' + req.body.id + '.jpeg';
     fs.unlink(imageFile, function (err) {
       if (err) return next(err);
       Image.deleteOne({ '_id': req.body.id }).exec()
@@ -544,7 +544,7 @@ module.exports = function (app, passport) {
   });
 
   router.post('/deleteSheet', function (req, res, next) {
-    var sheetFile = appDirectory + '/archive/sheets/' + req.body.id + '.pdf';
+    var sheetFile = appDirectory + '//app/archive/sheets/' + req.body.id + '.pdf';
     fs.unlink(sheetFile, function (err) {
       if (err) return next(err);
       Sheet.deleteOne({ '_id': req.body.id }).exec()
