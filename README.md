@@ -24,7 +24,9 @@ SERVICE INFO
 DATA STORAGE
 -----------------
 
-All project data is stored in the ./data directory as a bind mount.
+All project data is stored locally in ./data. 
+
+./data/archive directory bind mounted to /app/archive within docker (same level as /app/backend or /app/frontend).
 
 
 -----------------
