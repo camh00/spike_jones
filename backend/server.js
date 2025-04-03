@@ -49,7 +49,7 @@ app.use('/admin', require('./app/adminRoutes.js')(app, passport));
 // API routes
 app.use('/api', require('./app/apiRoutes.js'));
 
-app.use('/archive', express.static(path.join(__dirname, 'app/archive')));
+app.use('/archive', express.static(path.join(__dirname, '/app/archive')));
 
 // launch ======================================================================
 app.listen(port);
