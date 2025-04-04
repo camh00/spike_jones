@@ -22,15 +22,15 @@ var storage = multer.diskStorage({
     var ext = filetype.substring(filetype.indexOf('/') + 1);
     var destination;
     if (ext == 'jpeg' || ext == 'jpg' || ext == 'tiff') {
-      destination = path.join(appDirectory, '/app/archive/images/');
+      destination = path.join(appDirectory, '/archive/images/');
     } else if (ext == 'mp3' || ext == 'wav' || ext == 'mpeg') {
-      destination = path.join(appDirectory, '/app/archive/music/', req.body.id);
+      destination = path.join(appDirectory, '/archive/music/', req.body.id);
     } else if (ext == 'zip' || ext == 'rar' || ext == '7z' || ext == 'tar' || ext == 'x-zip-compressed') {
-      destination = path.join(appDirectory, '/app/archive/music/', req.body.collectionID);
+      destination = path.join(appDirectory, '/archive/music/', req.body.collectionID);
     } else if (ext == 'mp4' || ext == 'avi') {
-      destination = path.join(appDirectory, '/app/archive/videos/');
+      destination = path.join(appDirectory, '/archive/videos/');
     } else if (ext == 'pdf') {
-      destination = path.join(appDirectory, '/app/archive/sheets/');
+      destination = path.join(appDirectory, '/archive/sheets/');
     } else {
       return cb(new Error('Invalid file type ' + ext));
     }
@@ -202,7 +202,7 @@ module.exports = function (app, passport) {
     rmdir(path.join(appDirectory, '/app/archive/music/', req.body.collectionID), function (err) {
       if (err) throw err;
     });
-    var artFile = appDirectory + '//app/archive/images/' + req.body.collectionID + '.jpeg';
+    var artFile = appDirectory + '/app/archive/images/' + req.body.collectionID + '.jpeg';
     fs.unlink(artFile, function (err) {
       if (err) return next(err);
       Promise.all([
