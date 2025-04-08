@@ -19,14 +19,14 @@
     <link rel="alternate" type="application/rss+xml" title="Spike Jones » Feed" href="../feed/index.html">
     <link rel="alternate" type="application/rss+xml" title="Spike Jones » Comments Feed" href="../comments/feed/index.html">
     <link rel="stylesheet" id="thinkup-google-fonts-css" href="http://fonts.googleapis.com/css?family=Open+Sans%3A300%2C400%2C600%2C700&amp;subset=latin%2Clatin-ext" type="text/css" media="all">
-    <link rel="stylesheet" id="font-awesome-min-css" href="/frontend/wp-content/themes/minamaze/lib/extentions/font-awesome/css/font-awesome.mindeae.css?ver=3.2.1" type="text/css" media="all">
-    <link rel="stylesheet" id="font-awesome-cdn-css" href="/frontend/wp-content/themes/minamaze/lib/extentions/font-awesome-4.2.0/css/font-awesome.minae82.css?ver=4.2.0" type="text/css" media="all">
-    <link rel="stylesheet" id="dashicons-css-css" href="/frontend/wp-content/themes/minamaze/lib/extentions/dashicons/css/dashiconsd5f7.css?ver=2.0" type="text/css" media="all">
-    <link rel="stylesheet" id="bootstrap-css" href="/frontend/wp-content/themes/minamaze/lib/extentions/bootstrap/css/bootstrap.min95b8.css" type="text/css" media="all">
-    <link rel="stylesheet" id="prettyPhoto-css" href="/frontend/wp-content/themes/minamaze/lib/extentions/prettyPhoto/css/prettyPhoto005e.css?ver=3.1.6" type="text/css" media="all">
-    <link rel="stylesheet" id="style-css" href="/frontend/wp-content/themes/minamaze/style8d1e.css?ver=1.2.2" type="text/css" media="all">
-    <link rel="stylesheet" id="shortcodes-css" href="/frontend/wp-content/themes/minamaze/styles/style-shortcodes4963.css?ver=1.1" type="text/css" media="all">
-    <link rel="stylesheet" id="responsive-css" href="/frontend/wp-content/themes/minamaze/styles/style-responsive4963.css?ver=1.1" type="text/css" media="all">
+    <link rel="stylesheet" id="font-awesome-min-css" href="../../wp-content/themes/minamaze/lib/extentions/font-awesome/css/font-awesome.mindeae.css?ver=3.2.1" type="text/css" media="all">
+    <link rel="stylesheet" id="font-awesome-cdn-css" href="../../wp-content/themes/minamaze/lib/extentions/font-awesome-4.2.0/css/font-awesome.minae82.css?ver=4.2.0" type="text/css" media="all">
+    <link rel="stylesheet" id="dashicons-css-css" href="../../wp-content/themes/minamaze/lib/extentions/dashicons/css/dashiconsd5f7.css?ver=2.0" type="text/css" media="all">
+    <link rel="stylesheet" id="bootstrap-css" href="../../wp-content/themes/minamaze/lib/extentions/bootstrap/css/bootstrap.min95b8.css" type="text/css" media="all">
+    <link rel="stylesheet" id="prettyPhoto-css" href="../../wp-content/themes/minamaze/lib/extentions/prettyPhoto/css/prettyPhoto005e.css?ver=3.1.6" type="text/css" media="all">
+    <link rel="stylesheet" id="style-css" href="../../wp-content/themes/minamaze/style8d1e.css?ver=1.2.2" type="text/css" media="all">
+    <link rel="stylesheet" id="shortcodes-css" href="../../wp-content/themes/minamaze/styles/style-shortcodes4963.css?ver=1.1" type="text/css" media="all">
+    <link rel="stylesheet" id="responsive-css" href="../../wp-content/themes/minamaze/styles/style-responsive4963.css?ver=1.1" type="text/css" media="all">
     <link rel="https://api.w.org/" href="/frontend/wp-json/index.html">
     <link rel="Shortcut Icon" type="image/x-icon" href="/frontend/wp-content/uploads/2015/03/favicon.ico">
 
@@ -54,14 +54,16 @@
     </style>
 
 
-    <link rel="stylesheet" type="text/css" href="../lib/css/style.css" />
-    <script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../lib/css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../lib/js/modal.js"></script>
+    <script src="../lib/js/angular.min.js"></script>
+    <script src="../lib/js/app.js"></script>
 
 
 </head>
 
-<body oncontextmenu="return false" class="page page-id-608 page-template-default layout-responsive header-style1">
+<body class="page page-id-608 page-template-default layout-responsive header-style1">
     <div id="body-core" class="hfeed site">
 
         <header id="site-header">
@@ -83,49 +85,46 @@
                 <div id="header-core">
             
                     <div id="logo">
-                        <a rel="home" href="/"><img src="/frontend/wp-content/uploads/2015/02/spikeJonesLogo.png"
+                        <a rel="home" href="../../../index.html"><img src="../../wp-content/uploads/2015/02/spikeJonesLogo.png"
                                 alt="Spike Jones Project Logo" onerror="this.onerror=null; this.src='/frontend/wp-content/uploads/default-logo.png';"></a>
                     </div>
             
                     <div id="header-links" class="main-navigation">
                         <div id="header-links-inner" class="header-links">
                             <ul id="menu-main-menu" class="menu">
-                                <li id="menu-item-584"
-                                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-575">
-                                    <a href="/frontend/index.html">Home</a>
+                                <li id="menu-item-584" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-575">
+                                    <a href="../../../index.html">Home</a>
                                 </li>
                                 <li id="menu-item-16" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-575">
-                                    <a href="/frontend/bio/index.html">Bio</a>
+                                    <a href="../../bio/index.html">Bio</a>
                                 </li>
-                                <li id="menu-item-575"
-                                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-575"><a
-                                        href="/frontend/about/index.html">About</a></li>
-                                <li id="menu-item-625"
-                                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-576 current_page_item menu-item-584">
-                                    <a href="/frontend/media/index.html">Media</a>
+                                <li id="menu-item-575" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-575">
+                                    <a href="../../about/index.html">About</a>
+                                </li>
+                                <li id="menu-item-625" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-625">
+                                    <a href="../../media/index.html">Media</a>
                                     <ul class="sub-menu">
-                                        <li id="menu-item-667"
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-667"><a
-                                                href="/frontend/media/music/index.html">Music</a></li>
-                                        <li id="menu-item-668"
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-668"><a
-                                                href="/frontend/media/images/index.html">Photos</a></li>
-                                        <li id="menu-item-669"
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-669"><a
-                                                href="/frontend/media/videos/index.html">Videos</a></li>
+                                        <li id="menu-item-667" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-667">
+                                            <a href="../music/index.html">Music</a>
+                                        </li>
+                                        <li id="menu-item-668" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-668">
+                                            <a href="../images/index.html">Photos</a>
+                                        </li>
+                                        <li id="menu-item-669" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-669">
+                                            <a href="../videos/index.html">Videos</a>
+                                        </li>
                                     </ul>
                                 </li>
                                 <li id="menu-item-48" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48">
-                                    <a href="/frontend/contact/index.html">Contact</a>
+                                    <a href="../../contact/index.html">Contact</a>
                                 </li>
                                 <li id="menu-item-47" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47">
-                                    <a href="/frontend/getinvolved/index.html">Get Involved</a>
+                                    <a href="../../getinvolved/index.html">Get Involved</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
             
-                    </ul>
                 </div>
             </div><!-- #end of header -->
 
@@ -138,7 +137,7 @@
                         <div id="intro-core">
                             <h1 class="page-title"><span>Images</span></h1>
                             <div id="breadcrumbs">
-                                <div id="breadcrumbs-core"><a href="../index.html">Home</a><span class="delimiter"> / </span>Music</div>
+                                <div id="breadcrumbs-core"><a href="../index.html">Home</a><span class="delimiter"> / </span>Images</div>
                             </div>
                         </div>
                     </div>
@@ -185,8 +184,6 @@
 
     <script type="text/javascript" src="../../wp-content/themes/minamaze/lib/scripts/modernizr4235.js?ver=4.4.5"></script>
 
-    <script type="text/javascript" src="../lib/js/angular.min.js"></script>
-    <script type="text/javascript" src="../lib/js/app.js"></script>
     <script>
         $(document).ready(function () {
         $("#myBtn").click(function () {
