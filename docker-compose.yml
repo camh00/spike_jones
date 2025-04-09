@@ -5,6 +5,7 @@ services:
       - "27017:27017"
     volumes:
       - ./data/mongodb:/data/db
+
   node:
     build: .
     restart: unless-stopped
@@ -12,10 +13,11 @@ services:
       - "8080:80"
     depends_on:
       mongodb:
-                condition: service_started
-                restart: true
+        condition: service_started
+        restart: true
     environment:
       - DB_URI=mongodb://mongo:27017
       - ADMIN_PASSWORD=Admin Pass here
     volumes: 
       - ./data/archive:/app/archive
+      - ./frontend:/app/frontend  # Add this line to mount frontend code
